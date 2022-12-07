@@ -12,6 +12,7 @@ public class ItemCircle : MonoBehaviour
     [SerializeField] private GameObject hollowCircle;
     [SerializeField] private GameObject fullCircle;
     [SerializeField] bool TheOne = false;
+    [SerializeField] private bool training = false;
 
     private bool isSelected = false;
     private bool isHovering = false;
@@ -23,12 +24,15 @@ public class ItemCircle : MonoBehaviour
     [Space]
 
     public UnityEvent OnCorrectClick;
-
+    public UnityEvent OnCorrectClickTraining;
 
     void Awake()
     {
         if (OnCorrectClick == null)
             OnCorrectClick = new UnityEvent();
+
+        if (OnCorrectClickTraining == null)
+            OnCorrectClickTraining = new UnityEvent();
     }
 
     
@@ -71,7 +75,14 @@ public class ItemCircle : MonoBehaviour
                 if (TheOne)
                 {
                     isSelected = false;
-                    OnCorrectClick.Invoke();
+                    if (training)
+                    {
+                        OnCorrectClickTraining.Invoke();
+                    }
+                    else
+                    {
+                        OnCorrectClick.Invoke();
+                    }
                 }
             }
         }
@@ -107,6 +118,12 @@ public class ItemCircle : MonoBehaviour
     {
         isSelected = val;
     }
+
+    public void SetTheOne(bool val)
+    {
+        TheOne= val;
+    }
+
 
     public bool isTheOne()
     {

@@ -8,6 +8,7 @@ public class ExpManager : MonoBehaviour
 {
 
     [SerializeField] private List<GameObject> Plateaux = new List<GameObject>();
+    [SerializeField] private GameObject trainingPlate;
     [SerializeField] private List<ItemCircle> AllCircles = new List<ItemCircle>();
     [SerializeField] private List<TextMeshProUGUI> TextUIList = new List<TextMeshProUGUI>();
     [SerializeField] private TextMeshProUGUI MissedClickText;
@@ -17,6 +18,7 @@ public class ExpManager : MonoBehaviour
 
     [SerializeField] private GameObject cursor;
     [SerializeField] private GameObject menuScreen;
+    [SerializeField] private GameObject backUI;
     [SerializeField] private GameObject resultScreen;
 
     private int currentPlate = 0;
@@ -34,6 +36,7 @@ public class ExpManager : MonoBehaviour
         menuScreen.SetActive(true);
         resultScreen.SetActive(false);
         cursor.SetActive(false);
+        backUI.SetActive(false);
     }
 
     void Update()
@@ -54,11 +57,23 @@ public class ExpManager : MonoBehaviour
         ComputeTiming(1);
     }
 
-    private void Restart()
+    public void StartTraining()
+    {
+        cursor.GetComponent<CrossCursor>().StartExpCursor();
+        menuScreen.SetActive(false);
+        cursor.SetActive(true);
+        backUI.SetActive(true);
+        trainingPlate.SetActive(true);
+        hasStarted = true;
+    }
+
+    public void Restart()
     {
         Cursor.visible = true;
         menuScreen.SetActive(true);
+        backUI.SetActive(false);
         resultScreen.SetActive(false);
+        trainingPlate.SetActive(false);
         Plateaux[currentPlate].SetActive(false);
         currentPlate = 0;
         missedClick = 0;
@@ -66,6 +81,11 @@ public class ExpManager : MonoBehaviour
         cursor.SetActive(false);
         totalTime = 0.0f;
         timer.Clear();
+
+        foreach (ItemCircle obj in AllCircles)
+        {
+            obj.SetSelected(false);
+        }
     }
 
     public void NextPlate()
